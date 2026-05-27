@@ -1,0 +1,71 @@
+<h2>Comparing Telegram vs. Discord Bots</h2>
+<p class="subtitle">Here is how they stack up for a self-hosted agent command interface:</p>
+
+<div class="split">
+  <div class="mockup" style="flex: 1;">
+    <div class="mockup-header" style="background: #0088cc; color: white;">Telegram Bot (Recommended)</div>
+    <div class="mockup-body" style="padding: 1rem; line-height: 1.5;">
+      <h3>Simplicity & UX</h3>
+      <ul>
+        <li><strong>Easiest Implementation:</strong> A simple polling script in Python/Node (uses simple HTTPS requests, very stable).</li>
+        <li><strong>Lightweight App:</strong> Mobile app is incredibly fast, clean, and starts instantly.</li>
+        <li><strong>Custom Keyboards:</strong> We can create custom button overlays at the bottom (e.g., <code>[Start Task]</code>, <code>[Status]</code>, <code>[Stop]</code>).</li>
+        <li><strong>Notifications:</strong> Instant and reliable mobile push notifications.</li>
+      </ul>
+      <div class="placeholder" style="margin-top: 10px; padding: 10px; font-family: monospace; font-size: 0.85em; background: #eef8fc;">
+        <strong>You:</strong> /run build a landing page<br/>
+        <strong>Bot:</strong> Task received! Executing...<br/>
+        <strong>Bot:</strong> [Progress: 50%]<br/>
+        <strong>[Cancel Task] [Get Status]</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" style="flex: 1;">
+    <div class="mockup-header" style="background: #5865F2; color: white;">Discord Bot</div>
+    <div class="mockup-body" style="padding: 1rem; line-height: 1.5;">
+      <h3>Rich Layout & Community</h3>
+      <ul>
+        <li><strong>Moderately Complex:</strong> Requires maintaining a persistent WebSocket connection (Gateway API).</li>
+        <li><strong>Heavier App:</strong> Discord app consumes more memory and battery on mobile.</li>
+        <li><strong>Rich UI Components:</strong> Support for embeds (rich message blocks), dropdown lists, and slash commands.</li>
+        <li><strong>Multi-User ready:</strong> Naturally built for multiple people if you want to collaborate on tasks.</li>
+      </ul>
+      <div class="placeholder" style="margin-top: 10px; padding: 10px; font-family: monospace; font-size: 0.85em; background: #f6f6fc;">
+        <strong>You:</strong> /run build a landing page<br/>
+        <div style="border-left: 4px solid #5865F2; padding-left: 8px; margin: 4px 0;">
+          <strong>Antigravity Dispatch</strong><br/>
+          Status: Executing<br/>
+          File: index.html
+        </div>
+        <strong>[Cancel] [Refresh]</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top: 2rem;">
+  <div class="option" data-choice="telegram_bot" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>I prefer the Telegram Bot approach</h3>
+      <p>I don't mind downloading Telegram. It's lightweight, fast, and easy to build.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="discord_bot" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>I prefer the Discord Bot approach</h3>
+      <p>I already have Discord or prefer its structure, despite the slightly heavier app/code.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="custom_webui" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Let's stick with the Custom Web UI (A from before)</h3>
+      <p>I'd rather have a dedicated mobile web page with a custom interface, avoiding both chat apps.</p>
+    </div>
+  </div>
+</div>

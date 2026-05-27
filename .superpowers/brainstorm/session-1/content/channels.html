@@ -1,0 +1,48 @@
+<h2>Choose Your Mobile Interface Channel</h2>
+<p class="subtitle">Since you don't use Telegram or Discord much, a custom Web UI might be the most satisfying. Select an option below to compare details:</p>
+
+<div class="options">
+  <div class="option" data-choice="webui" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Premium Web UI (Responsive Mobile Web App)</h3>
+      <p>A custom dark-mode dashboard tailored for mobile browsers. Securely exposed to your phone via a free Cloudflare Tunnel.</p>
+      <div style="margin-top: 10px; font-size: 0.85em; opacity: 0.85;">
+        <strong>Pros:</strong> Full control over looks, real-time log streaming, custom action buttons, file uploads.<br/>
+        <strong>Cons:</strong> Needs a background tunneling service running on your desktop.
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="telegram" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Telegram Bot</h3>
+      <p>Control your agent by sending text messages to a private Telegram bot.</p>
+      <div style="margin-top: 10px; font-size: 0.85em; opacity: 0.85;">
+        <strong>Pros:</strong> Zero local network configuration needed, native mobile push notifications out-of-the-box.<br/>
+        <strong>Cons:</strong> You don't use Telegram much; UI is constrained to chat bubbles and basic inline buttons.
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="discord" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Discord Bot</h3>
+      <p>Control your agent via commands in a private Discord server channel.</p>
+      <div style="margin-top: 10px; font-size: 0.85em; opacity: 0.85;">
+        <strong>Pros:</strong> Native mobile notifications, easy text commands, no local port-forwarding.<br/>
+        <strong>Cons:</strong> You don't use Discord much; UI is limited to Discord's chat layout and message formatting.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 2rem;">
+  <h3>How Security & Tunneling Works for Option A</h3>
+  <div class="placeholder" style="padding: 1.5rem; text-align: left; line-height: 1.5;">
+    <p><strong>Cloudflare Tunnels (Free & Secure):</strong> A small official agent (<code>cloudflared</code>) runs on your local machine. It connects outbound to Cloudflare, mapping your local port (e.g. <code>localhost:3000</code>) to a public URL (e.g., <code>https://my-dispatch.trycloudflare.com</code>).</p>
+    <p><strong>Authentication:</strong> To prevent random people from triggering tasks on your computer, we can secure the Web App with a simple password, passwordless magic link, or a secure token stored in your mobile browser's cookies.</p>
+  </div>
+</div>
