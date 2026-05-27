@@ -1,6 +1,8 @@
 {
   "name": "dispatch-for-antigravity",
   "version": "1.0.0",
+  "private": true,
+  "license": "UNLICENSED",
   "description": "Telegram Dispatch Bot for Antigravity",
   "main": "index.js",
   "type": "module",
