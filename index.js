@@ -66,12 +66,22 @@ async function runAgy(ctx, prompt, continueSession = false) {
     return ctx.reply(`❌ Security Block: ${err.message}`);
   }
 
+  // Ensure reports directory exists inside the bot's folder
+  const reportsDir = path.join(__dirname, 'reports');
+  if (!fs.existsSync(reportsDir)) {
+    fs.mkdirSync(reportsDir, { recursive: true });
+  }
+
   await ctx.reply(`🚀 Starting Antigravity in \`${activeWorkspace}\`…`, { parse_mode: 'Markdown' });
   session.resetTimeout();
 
+  // Instruct the agent to save any generated reports/documents in the reports directory
+  const systemInstruction = `\n\n[System Instruction: If you generate any report, document, text summary, analysis, or export file, you MUST write it directly to the designated reports folder: "${reportsDir}". Write the file there using a clear, descriptive name (e.g. "budget_analysis.md"), and mention the file path in your final response.]`;
+  const finalPrompt = prompt + systemInstruction;
+
   // Arguments passed as a strict array — shell:false means no injection risk
   const args = [
-    '--prompt', prompt,
+    '--prompt', finalPrompt,
     '--dangerously-skip-permissions',
     '--add-dir', activeWorkspace,
   ];
