@@ -36,6 +36,14 @@ let activeWorkspace  = path.resolve(defaultWs);
 let idleTimer        = null;
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
+function escapeHTML(text) {
+  if (typeof text !== 'string') return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 function resetIdleTimer(ctx) {
   clearTimeout(idleTimer);
   idleTimer = setTimeout(async () => {
@@ -75,7 +83,7 @@ async function runAgy(ctx, prompt, continueSession = false) {
   proc.stdin?.setEncoding('utf8');
 
   const buffer = new OutputBuffer(
-    async (text) => ctx.reply(`\`\`\`\n${text}\n\`\`\``, { parse_mode: 'Markdown' }),
+    async (text) => ctx.reply(`<pre><code>${escapeHTML(text)}</code></pre>`, { parse_mode: 'HTML' }),
     { chunkSize: 3800, flushMs: 5000 }
   );
 
@@ -85,10 +93,10 @@ async function runAgy(ctx, prompt, continueSession = false) {
 
     // Surface key milestones as inline status messages
     const cmdMatch = str.match(/Running command:? (.+)/);
-    if (cmdMatch) ctx.reply(`💻 \`${cmdMatch[1].trim()}\``, { parse_mode: 'Markdown' });
+    if (cmdMatch) ctx.reply(`💻 <code>${escapeHTML(cmdMatch[1].trim())}</code>`, { parse_mode: 'HTML' });
 
     const fileMatch = str.match(/Writing file:? (.+)/);
-    if (fileMatch) ctx.reply(`✏️ \`${fileMatch[1].trim()}\``, { parse_mode: 'Markdown' });
+    if (fileMatch) ctx.reply(`✏️ <code>${escapeHTML(fileMatch[1].trim())}</code>`, { parse_mode: 'HTML' });
 
     buffer.feed(str);
   });
@@ -115,8 +123,8 @@ async function runAgy(ctx, prompt, continueSession = false) {
         gitSummary = '(Not a git repository or no staged changes)';
       }
       await ctx.reply(
-        `✅ *Task complete!*\n\n*Changes:*\n\`\`\`\n${gitSummary}\n\`\`\``,
-        { parse_mode: 'Markdown' }
+        `✅ <b>Task complete!</b>\n\n<b>Changes:</b>\n<pre><code>${escapeHTML(gitSummary)}</code></pre>`,
+        { parse_mode: 'HTML' }
       );
     } else {
       await ctx.reply(`❌ Task exited with code ${code}.`);

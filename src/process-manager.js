@@ -23,7 +23,7 @@ export function executeAgent(executablePath, args, workspacePath) {
     shell: false,                       // CRITICAL: prevents command injection
     cwd: workspacePath,
     env: { ...process.env },            // inherit environment from parent
-    stdio: ['ignore', 'pipe', 'pipe'],  // expose stdout/stderr as readable streams
+    stdio: ['pipe', 'pipe', 'pipe'],  // expose stdin/stdout/stderr as streams
   });
 }
 
