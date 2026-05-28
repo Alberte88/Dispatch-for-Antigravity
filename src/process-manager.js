@@ -24,6 +24,7 @@ export function executeAgent(executablePath, args, workspacePath) {
     cwd: workspacePath,
     env: { ...process.env },            // inherit environment from parent
     stdio: ['pipe', 'pipe', 'pipe'],  // expose stdin/stdout/stderr as streams
+    detached: true,                     // run in a separate process group, detaching from parent console
   });
 }
 
