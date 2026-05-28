@@ -208,15 +208,15 @@ bot.command('help', (ctx) => ctx.reply(
   `Send your PIN to unlock (20-min sliding session)\n` +
   `/lock — Lock session immediately\n\n` +
   `🚀 *Running tasks* (requires unlock)\n` +
-  `/run <task> — Start a new Antigravity task\n` +
-  `/c <task> — Continue previous Antigravity session\n` +
+  `/run \`<task>\` — Start a new Antigravity task\n` +
+  `/c \`<task>\` — Continue previous Antigravity session\n` +
   `/stop — Kill running task and all child processes\n\n` +
   `📂 *Workspace*\n` +
   `/workspace — Show current workspace\n` +
-  `/workspace <path> — Switch workspace (must be inside WORKSPACE_ROOT)\n\n` +
+  `/workspace \`<path>\` — Switch workspace (must be inside \`WORKSPACE_ROOT\`)\n\n` +
   `🤖 *Model*\n` +
   `/model — Show current model\n` +
-  `/model <name> — Switch model in settings.json\n\n` +
+  `/model \`<name>\` — Switch model in \`settings.json\`\n\n` +
   `📊 *Status*\n` +
   `/status — Show bot state`,
   { parse_mode: 'Markdown' }
@@ -251,6 +251,11 @@ bot.on('message:text', async (ctx) => {
 
   // Plain English shorthand: treat any non-command authorized text as a /run prompt
   await runAgy(ctx, text, false);
+});
+
+// ─── Error Handling ────────────────────────────────────────────────────────
+bot.catch((err) => {
+  console.error('⚠️  Error in bot middleware:', err.error || err);
 });
 
 // ─── Start ─────────────────────────────────────────────────────────────────
