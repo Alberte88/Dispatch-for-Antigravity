@@ -81,8 +81,9 @@ async function runAgy(ctx, prompt, continueSession = false) {
   currentProcess = proc;
   resetIdleTimer(ctx);
 
-  // Wire stdin so /message replies can feed input to running processes
+  // Wire stdin and immediately close it so the process knows no more input is coming (prevents hanging)
   proc.stdin?.setEncoding('utf8');
+  proc.stdin?.end();
 
   const buffer = new OutputBuffer(
     async (text) => ctx.reply(`<pre><code>${escapeHTML(text)}</code></pre>`, { parse_mode: 'HTML' }),
@@ -136,7 +137,13 @@ async function runAgy(ctx, prompt, continueSession = false) {
 
 // ─── Middleware: restrict to allowed chat ──────────────────────────────────
 bot.use(async (ctx, next) => {
-  if (ctx.chat?.id === allowedChat) await next();
+  console.log(`📥 Update received from chat ${ctx.chat?.id}:`, ctx.message?.text || '(non-text update)');
+  if (ctx.chat?.id === allowedChat) {
+    console.log('✅ Chat ID matches allowedChat, proceeding...');
+    await next();
+  } else {
+    console.log(`❌ Chat ID ${ctx.chat?.id} does not match allowedChat ${allowedChat}`);
+  }
 });
 
 // ─── Commands ──────────────────────────────────────────────────────────────
