@@ -3,12 +3,14 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 import { SessionManager } from './src/session-manager.js';
 import { validateWorkspacePath } from './src/path-validator.js';
 import { executeAgent, killProcessTree } from './src/process-manager.js';
 import { OutputBuffer } from './src/output-buffer.js';
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // ─── Config & startup validation ───────────────────────────────────────────
 const token          = process.env.TELEGRAM_BOT_TOKEN;

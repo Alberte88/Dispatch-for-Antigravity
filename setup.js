@@ -14,12 +14,14 @@ import crypto from 'crypto';
 import fs from 'fs';
 import readline from 'readline';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 const ask = (q) => new Promise(resolve => rl.question(q, resolve));
 
 console.log('\n🚀  Dispatch for Antigravity — First-Run Setup\n');
-console.log('This will create a .env file in the current directory.\n');
+console.log('This will create a .env file in the project directory.\n');
 
 const token         = await ask('📱 Telegram Bot Token (from @BotFather): ');
 const chatId        = await ask('💬 Your Telegram Chat ID (from @userinfobot): ');
@@ -39,7 +41,7 @@ DEFAULT_WORKSPACE=${defaultWs.trim()}
 ANTIGRAVITY_PATH=${resolvedAgy}
 `;
 
-fs.writeFileSync(path.resolve('.env'), envContent, 'utf8');
+fs.writeFileSync(path.resolve(__dirname, '.env'), envContent, 'utf8');
 rl.close();
 
 console.log('\n✅  .env file created successfully!');
