@@ -20,9 +20,10 @@ import { spawn } from 'child_process';
  */
 export function executeAgent(executablePath, args, workspacePath) {
   return spawn(executablePath, args, {
-    shell: false,            // CRITICAL: prevents command injection
+    shell: false,                       // CRITICAL: prevents command injection
     cwd: workspacePath,
-    env: { ...process.env }, // inherit environment from parent
+    env: { ...process.env },            // inherit environment from parent
+    stdio: ['ignore', 'pipe', 'pipe'],  // expose stdout/stderr as readable streams
   });
 }
 
@@ -54,7 +55,8 @@ export function killProcessTree(pid) {
     }
 
     killer.on('close', (code) => {
-      if (code === 0) {
+      // code 0 = success; code 128 = process already gone (both are fine)
+      if (code === 0 || code === 128) {
         resolve();
       } else {
         reject(new Error(`kill command exited with code ${code} for PID ${pid}`));
