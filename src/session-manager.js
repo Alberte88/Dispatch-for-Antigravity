@@ -9,7 +9,9 @@ export class SessionManager {
 
   verifyAndAuthorize(plainPin) {
     const hash = crypto.createHash('sha256').update(plainPin).digest('hex');
-    if (hash === this.hashedPin) {
+    const hashBuf = Buffer.from(hash);
+    const storedBuf = Buffer.from(this.hashedPin);
+    if (hashBuf.length === storedBuf.length && crypto.timingSafeEqual(hashBuf, storedBuf)) {
       this.resetTimeout();
       return true;
     }
