@@ -256,17 +256,24 @@ bot.on('message:text', async (ctx) => {
   // Skip command messages (already handled above)
   if (text.startsWith('/')) return;
 
-  // PIN gate
-  if (!session.isAuthorized()) {
-    const ok = session.verifyAndAuthorize(text);
+  const wasAuthorized = session.isAuthorized();
+  const pinVerified = session.verifyAndAuthorize(text);
+
+  if (pinVerified) {
     // Best-effort: delete PIN message to keep chat history clean
     try { await ctx.api.deleteMessage(ctx.chat.id, ctx.message.message_id); } catch { /* ignore */ }
     return ctx.reply(
-      ok
-        ? '🔓 *Unlocked!* Session active for 20 minutes.'
-        : '🔒 *Wrong PIN.* Try again.',
+      wasAuthorized
+        ? '🔓 *Already unlocked!* Session active for another 20 minutes.'
+        : '🔓 *Unlocked!* Session active for 20 minutes.',
       { parse_mode: 'Markdown' }
     );
+  }
+
+  // If not authorized and PIN verification failed
+  if (!wasAuthorized) {
+    try { await ctx.api.deleteMessage(ctx.chat.id, ctx.message.message_id); } catch { /* ignore */ }
+    return ctx.reply('🔒 *Wrong PIN.* Try again.', { parse_mode: 'Markdown' });
   }
 
   // If a process is running, pipe plain text as stdin input
