@@ -81,8 +81,14 @@ async function runAgy(ctx, prompt, continueSession = false) {
   await ctx.reply(`🚀 Starting Antigravity in \`${activeWorkspace}\`…`, { parse_mode: 'Markdown' });
   session.resetTimeout();
 
-  // Instruct the agent to save any generated reports/documents in the reports directory
-  const systemInstruction = `\n\n[System Instruction: If you generate any report, document, text summary, analysis, or export file, you MUST write it directly to the designated reports folder: "${reportsDir}". Write the file there using a clear, descriptive name (e.g. "budget_analysis.md"), and mention the file path in your final response.]`;
+  // Build a timestamped filename for this task's output file
+  const now = new Date();
+  const ts = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}-${String(now.getMinutes()).padStart(2,'0')}`;
+  const slug = prompt.toLowerCase().replace(/[^a-z0-9]+/g, '_').slice(0, 40).replace(/_+$/, '');
+  const reportFile = path.join(reportsDir, `${ts}_${slug}.md`);
+
+  // Unconditional instruction: the agent MUST always write its complete response to disk
+  const systemInstruction = `\n\n[MANDATORY SYSTEM INSTRUCTION — follow this regardless of task type:\n1. Complete your task as requested.\n2. When finished, you MUST write your complete final response/output as a Markdown file to this exact path: "${reportFile}"\n3. The file must contain: a heading with the task, the date, and your full response.\n4. After writing the file, confirm "✅ Report saved to: ${reportFile}" in your response.\nDo NOT skip this step under any circumstances.]`;
   const finalPrompt = prompt + systemInstruction;
 
   // Arguments passed as a strict array — shell:false means no injection risk
