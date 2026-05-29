@@ -19,11 +19,21 @@ const hashedPin      = process.env.HASHED_PIN;
 const workspaceRoot  = process.env.WORKSPACE_ROOT;
 const defaultWs      = process.env.DEFAULT_WORKSPACE;
 const agyPath        = process.env.ANTIGRAVITY_PATH;
+// Reports directory: use env var if set, otherwise fall back to Google Drive, then local 'reports' folder
+const reportsDir     = process.env.REPORTS_DIR
+  || 'G:\\My Drive\\Antigravity Reports';
 
 if (!token || !allowedChat || !hashedPin || !workspaceRoot || !defaultWs || !agyPath) {
   console.error('❌  Missing required .env keys. Copy .env.example and fill in all values.');
   process.exit(1);
 }
+
+// Ensure reports directory exists at startup
+if (!fs.existsSync(reportsDir)) {
+  fs.mkdirSync(reportsDir, { recursive: true });
+  console.log(`📁  Created reports directory: ${reportsDir}`);
+}
+console.log(`📁  Reports folder: ${reportsDir}`);
 
 const cliSettingsPath = path.join(
   process.env.USERPROFILE || process.env.HOME || '',
@@ -66,11 +76,7 @@ async function runAgy(ctx, prompt, continueSession = false) {
     return ctx.reply(`❌ Security Block: ${err.message}`);
   }
 
-  // Ensure reports directory exists inside the bot's folder
-  const reportsDir = path.join(__dirname, 'reports');
-  if (!fs.existsSync(reportsDir)) {
-    fs.mkdirSync(reportsDir, { recursive: true });
-  }
+  // reportsDir is initialised at startup (top of file) — already guaranteed to exist
 
   await ctx.reply(`🚀 Starting Antigravity in \`${activeWorkspace}\`…`, { parse_mode: 'Markdown' });
   session.resetTimeout();
